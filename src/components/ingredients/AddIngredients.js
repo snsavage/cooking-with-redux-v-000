@@ -4,32 +4,35 @@ import { ConnectedAddIngredient } from './AddIngredient';
 
 export class AddIngredients extends Component {
   render(){
-    const currentIngredients = this.props.ingredients.filter((e) =>
-      this.props.selectedIngredients.includes(e.id)
-    );
+    const { selectedIngredients, unselectedIngredients } = this.props;
+    let ingredients, addIngredients;
 
-    const currentIngredientsDisplay = currentIngredients.map((e, i) =>
-      <li key={i}>{e.name}</li>
-    );
+    if (selectedIngredients && unselectedIngredients) {
+      ingredients = selectedIngredients.map((e, i) =>
+        <li key={i}>{e.name}</li>
+      );
 
-    const addIngredients = this.props.ingredients.filter((e) =>
-      !this.props.selectedIngredients.includes(e.id)
-    );
+      addIngredients = unselectedIngredients.map((e, i) =>
+        <ConnectedAddIngredient key={i} {...e} />
+      );
+    } else {
+      ingredients = [];
 
-    const addIngredientsDisplay = addIngredients.map((e, i) =>
-      <ConnectedAddIngredient key={i} {...e} />
-    );
+      addIngredients = this.props.ingredients.map((e, i) =>
+        <ConnectedAddIngredient key={i} {...e} />
+      );
+    }
 
     return(
       <div>
         <h3>Ingredients in Recipe</h3>
         <ul>
-          {currentIngredientsDisplay}
+          {ingredients}
         </ul>
 
         <h3>Other Ingredients</h3>
         <ul>
-          {addIngredientsDisplay}
+          {addIngredients}
         </ul>
       </div>
     )
@@ -39,7 +42,6 @@ export class AddIngredients extends Component {
 const mapStateToProps = (state) => {
   return {
     ingredients: state.ingredients,
-    selectedIngredients: state.recipeForm.ingredientIds
   }
 }
 

@@ -12,6 +12,18 @@ export class RecipesInput extends Component {
     this.state = { name: '' }
   }
 
+  selectedIngredients() {
+    return this.props.ingredients.filter((e) =>
+      this.props.ingredientIds.includes(e.id)
+    )
+  };
+
+  unselectedIngredients() {
+    return this.props.ingredients.filter((e) =>
+      !this.props.ingredientIds.includes(e.id)
+    );
+  }
+
   handleOnChange(ev) {
     this.setState({ name: ev.target.value });
   }
@@ -37,7 +49,9 @@ export class RecipesInput extends Component {
               value={this.state.name}
               onChange={(ev) => this.handleOnChange(ev)} />
           </p>
-          <ConnectedAddIngredients />
+          <ConnectedAddIngredients
+            selectedIngredients={this.selectedIngredients()}
+            unselectedIngredients={this.unselectedIngredients()} />
           <input type="submit" />
         </form>
         <ConnectedRecipes />
@@ -56,6 +70,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    ingredients: state.ingredients,
     ingredientIds: state.recipeForm.ingredientIds
   }
 }
